@@ -23,8 +23,8 @@ class DBClient {
 
     // Returns true if the connection to MongoDB is successful, otherwise false
     isAlive() {
-        return this.client && this.client.isConnected();
-    }
+        return this.client && this.client.topology && this.client.topology.isConnected();
+      }
 
     // Asynchronous function to return the number of documents in the 'users' collection
     async nbUsers() {
