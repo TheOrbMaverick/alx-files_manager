@@ -37,6 +37,11 @@ class DBClient {
         if (!this.isAlive()) return 0;
         return this.db.collection('files').countDocuments();
     }
+
+    usersCollection() {
+    return this.client.db().collection('users');
+  }
+
 }
 
 // Create and export an instance of DBClient
