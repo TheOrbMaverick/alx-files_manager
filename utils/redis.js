@@ -56,7 +56,7 @@ class RedisClient {
 	if (!this.isAlive()) return;
         try {
             await this.delAsync(key);
-        } catch {
+        } catch (error) {
             console.log(`Error deleting key ${key}: ${error.message}`);
         }
     }

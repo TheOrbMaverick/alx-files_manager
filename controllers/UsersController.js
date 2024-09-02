@@ -1,7 +1,6 @@
 import sha1 from 'sha1';
 import Queue from 'bull/lib/queue';
 import dbClient from '../utils/db';
-import redisClient from '../utils/redis';
 
 const userQueue = new Queue('sending an email');
 
@@ -27,13 +26,13 @@ async function postNew(req, res) {
 
     const insertInfo = await (
       await dbClient.usersCollection()
-    ).insertOne( { email, hashedPassword });
+    ).insertOne({ email, hashedPassword });
 
     const id = insertInfo.insertedId.toString();
     userQueue.add({ id });
 
-    res.status(201).json({ id: id, email });
-  } catch(error) {
+    res.status(201).json({ id, email });
+  } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server error' });
   }
