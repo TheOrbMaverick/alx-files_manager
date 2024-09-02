@@ -21,4 +21,4 @@ router.get('/disconnect', AuthController.getDisconnect);
 // Add new endpoint
 router.post('/files', FilesController.postUpload);
 
-export default router;
+module.exports = router;
