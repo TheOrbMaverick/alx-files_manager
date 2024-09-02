@@ -4,7 +4,8 @@ import dbClient from '../utils/db';
 class UsersController {
   // Handler for the POST /users endpoint
   static async postNew(req, res) {
-    const { email, password } = req.body;
+    const email = req.body.email;
+    const password = req.body.password;
 
     // Check if email is missing
     if (!email) {
