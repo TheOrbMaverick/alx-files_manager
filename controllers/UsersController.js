@@ -1,4 +1,4 @@
-import sha1 from 'sha1'; // Import the SHA1 hashing library
+import sha1 from 'sha1';
 import dbClient from '../utils/db';
 
 class UsersController {
