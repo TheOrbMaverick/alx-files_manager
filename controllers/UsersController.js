@@ -1,41 +1,40 @@
-import sha1 from 'sha1';
-import Queue from 'bull/lib/queue';
 import dbClient from '../utils/db';
+import sha1 from 'sha1';
 
-const userQueue = new Queue('sending an email');
+class UsersController {
+  // Handler for POST /users endpoint
+  static async postNew(req, res) {
+    const { email, password } = req.body;
 
-async function postNew(req, res) {
-  const email = req.body ? req.body.email : null;
-  const password = req.body ? req.body.password : null;
+    // Check for missing email or password
+    if (!email) {
+      return res.status(400).json({ error: 'Missing email' });
+    }
+    if (!password) {
+      return res.status(400).json({ error: 'Missing password' });
+    }
 
-  if (email === undefined) {
-    return res.status(400).json({ error: 'Missing email' });
-  }
-
-  if (password === undefined) {
-    return res.status(400).json({ error: 'Missing password' });
-  }
-
-  try {
-    const existingUser = await (await dbClient.usersCollection()).findOne({ email });
+    // Check if the user already exists
+    const existingUser = await dbClient.client
+      .db()
+      .collection('users')
+      .findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: 'Already exist' });
     }
 
+    // Hash the password
     const hashedPassword = sha1(password);
 
-    const insertInfo = await (
-      await dbClient.usersCollection()
-    ).insertOne({ email, hashedPassword });
+    // Create the new user
+    const newUser = await dbClient.client
+      .db()
+      .collection('users')
+      .insertOne({ email, password: hashedPassword });
 
-    const id = insertInfo.insertedId.toString();
-    userQueue.add({ id });
-
-    res.status(201).json({ id, email });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server error' });
+    // Return the new user with only the id and email
+    return res.status(201).json({ id: newUser.insertedId, email });
   }
 }
 
-module.exports = { postNew };
+export default UsersController;
