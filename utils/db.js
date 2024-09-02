@@ -28,7 +28,6 @@ class DBClient {
 
   // Asynchronous function to return the number of documents in the 'users' collection
   async nbUsers() {
-    if (!this.isAlive()) return 0;
     return this.db.collection('users').countDocuments();
   }
 
