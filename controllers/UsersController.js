@@ -1,5 +1,5 @@
-import dbClient from '../utils/db';
 import sha1 from 'sha1'; // Import the SHA1 hashing library
+import dbClient from '../utils/db';
 
 class UsersController {
   // Handler for the POST /users endpoint
