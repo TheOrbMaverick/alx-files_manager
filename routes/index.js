@@ -1,7 +1,10 @@
 import { Router } from 'express';
 import AppController from '../controllers/AppController';
-import UsersController from '../controllers/UsersController';
+// import UsersController from '../controllers/UsersController';
 import AuthController from '../controllers/AuthController';
+import FilesController from '../controllers/FilesController';
+
+const UsersController = require('../controllers/UsersController');
 
 const router = Router();
 
@@ -16,5 +19,8 @@ router.get('/users/me', UsersController.getMe);
 // Authentication routes
 router.get('/connect', AuthController.getConnect);
 router.get('/disconnect', AuthController.getDisconnect);
+
+// Add new endpoint
+router.post('/files', FilesController.postUpload);
 
 export default router;
