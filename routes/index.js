@@ -5,9 +5,9 @@ import AuthController from '../controllers/AuthController';
 import FilesController from '../controllers/FilesController';
 
 const express = require('express');
+
 const router = express.Router();
 const AppController = require('../controllers/AppController');
-
 
 // Utility routes
 router.get('/status', AppController.getStatus);

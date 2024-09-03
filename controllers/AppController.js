@@ -14,7 +14,7 @@ exports.getStatus = async (req, res) => {
 // Get the count of users and files in the database
 exports.getStats = async (req, res) => {
   const dbClient = getDbClient();
-  
+
   const usersCount = await dbClient.nbUsers();
   const filesCount = await dbClient.nbFiles();
 
