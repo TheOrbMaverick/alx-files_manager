@@ -21,33 +21,28 @@ export default class UsersController {
       return;
     }
 
-    try {
-      // Access the users collection
-      const usersCollection = await dbClient.usersCollection();
+    // Access the users collection
+    const usersCollection = await dbClient.usersCollection();
 
-      // Check if the user already exists
-      const user = await usersCollection.findOne({ email });
-      if (user) {
-        res.status(400).json({ error: 'Already exist' });
-        return;
-      }
-
-      // Hash the password
-      const hashedPassword = sha1(password);
-
-      // Insert the new user
-      const insertionInfo = await usersCollection.insertOne({ email, password: hashedPassword });
-      const userId = insertionInfo.insertedId.toString();
-
-      // Add a job to the queue for email sending
-      userQueue.add({ userId });
-
-      // Return the new user with only the email and ID
-      res.status(201).json({ email, id: userId });
-    } catch (error) {
-      console.error('Error creating user:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    // Check if the user already exists
+    const user = await usersCollection.findOne({ email });
+    if (user) {
+      res.status(400).json({ error: 'Already exist' });
+      return;
     }
+
+    // Hash the password
+    const hashedPassword = sha1(password);
+
+    // Insert the new user
+    const insertionInfo = await usersCollection.insertOne({ email, password: hashedPassword });
+    const userId = insertionInfo.insertedId.toString();
+
+    // Add a job to the queue for email sending
+    userQueue.add({ userId });
+
+    // Return the new user with only the email and ID
+    res.status(201).json({ email, id: userId });
   }
 
   // Handler for GET /me endpoint
