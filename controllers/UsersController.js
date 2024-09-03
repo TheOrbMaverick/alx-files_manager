@@ -24,7 +24,7 @@ export default class UsersController {
     try {
       // Access the users collection
       const usersCollection = await dbClient.usersCollection();
-      
+
       // Check if the user already exists
       const user = await usersCollection.findOne({ email });
       if (user) {
