@@ -1,8 +1,8 @@
-const { Router } = require('express');
-const AppController = require('../controllers/AppController')
-const AuthController = require('../controllers/AuthController')
-const FilesController = require('../controllers/FilesController')
-const UsersController = require('../controllers/UsersController');
+import { Router } from 'express';
+import AppController from '../controllers/AppController';
+import UsersController from '../controllers/UsersController';
+import AuthController from '../controllers/AuthController';
+import FilesController from '../controllers/FilesController';
 
 const router = Router();
 
@@ -21,4 +21,4 @@ router.get('/disconnect', AuthController.getDisconnect);
 // Add new endpoint
 router.post('/files', FilesController.postUpload);
 
-module.exports = router;
+export default router;

@@ -1,7 +1,8 @@
-const dbClient = require('../utils/db');
-const redisClient = require('../utils/redis')
+import dbClient from '../utils/db';
+import redisClient from '../utils/redis';
 
 class AppController {
+
   // Controller for the /status endpoint
   static getStatus(req, res) {
     const redisAlive = redisClient.isAlive();
@@ -19,4 +20,4 @@ class AppController {
   }
 }
 
-module.exports = AppController;
+export default AppController;
