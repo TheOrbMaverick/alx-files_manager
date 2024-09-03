@@ -1,33 +1,36 @@
-import sha1 from 'sha1';
 import dbClient from '../utils/db';
+import sha1 from 'sha1'; // You'll need to install this package
 
 class UsersController {
-  // Handler for the POST /users endpoint
+  // Handler for POST /users endpoint
   static async postNew(req, res) {
-    const email = req.body.email ? req.body.email: null;
-    const password = req.body.password ? req.body.password: null;
+    const { email, password } = req.body;
 
-    // Check if email is missing
+    // Check for missing email or password
     if (!email) {
       return res.status(400).json({ error: 'Missing email' });
     }
-
-    // Check if password is missing
     if (!password) {
       return res.status(400).json({ error: 'Missing password' });
     }
 
-    // Check if the email already exists in the database
-    const existingUser = await dbClient.client.db().collection('users').findOne({ email });
+    // Check if the user already exists
+    const existingUser = await dbClient.client
+      .db()
+      .collection('users')
+      .findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: 'Already exist' });
     }
 
-    // Hash the password using SHA1
+    // Hash the password
     const hashedPassword = sha1(password);
 
-    // Create the new user and insert it into the users collection
-    const newUser = await dbClient.client.db().collection('users').insertOne({ email, password: hashedPassword });
+    // Create the new user
+    const newUser = await dbClient.client
+      .db()
+      .collection('users')
+      .insertOne({ email, password: hashedPassword });
 
     // Return the new user with only the id and email
     return res.status(201).json({ id: newUser.insertedId, email });
