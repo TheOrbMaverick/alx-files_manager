@@ -1,5 +1,5 @@
+import sha1 from 'sha1';
 import dbClient from '../utils/db';
-import sha1 from 'sha1'; // You'll need to install this package
 
 class UsersController {
   // Handler for POST /users endpoint
