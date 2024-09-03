@@ -11,7 +11,7 @@ app.use('/', routes);
 
 app.listen(port, (err) => {
   if (err) { console.log(err); }
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port ${PORT}`);
 });
 
 export default app;
