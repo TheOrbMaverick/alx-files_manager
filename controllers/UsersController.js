@@ -2,7 +2,6 @@ import sha1 from 'sha1';
 import Queue from 'bull';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
-import Bull from 'bull';
 
 const userQueue = new Queue('userQueue');
 
