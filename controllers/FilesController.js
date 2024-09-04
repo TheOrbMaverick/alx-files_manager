@@ -2,7 +2,6 @@ import { ObjectId } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
 import Bull from 'bull';
 import fs from 'fs';
-import mime from 'mime-types';
 import path from 'path';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
