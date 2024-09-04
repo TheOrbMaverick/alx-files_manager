@@ -81,7 +81,7 @@ export default class FilesController {
       if (type === 'image') {
         fileQueue.add({
           userId,
-          field: fileDocument.id,
+          fileId: fileDocument.id,
         });
       }
 
@@ -210,6 +210,7 @@ export default class FilesController {
 
   static async getFile(req, res) {
     const { id } = req.params;
+    const { size } = req.query;
 
     if (!ObjectId.isValid(id)) {
       return res.status(404).json({ error: 'Not found' });
@@ -237,10 +238,20 @@ export default class FilesController {
       return res.status(404).json({ error: 'Not found' });
     }
 
+    let filePath = file.localPath;
+
+    if (size) {
+      const allowedSizes = ['500', '250', '100'];
+      if (!allowedSizes.includes(size)) {
+        return res.status(400).json({ error: 'Invalid size' });
+      }
+      filePath = `${file.localPath}_${size}`;
+    }
+
     const mimeType = mime.lookup(file.name) || 'application/octet-stream';
     res.setHeader('Content-Type', mimeType);
 
-    const fileContent = fs.readFileSync(file.localPath);
+    const fileContent = fs.readFileSync(filePath);
     return res.status(200).send(fileContent);
   }
 }
