@@ -138,4 +138,72 @@ export default class FilesController {
     ]).toArray();
     return res.status(200).json(files);
   }
+
+  static async putPublish(req, res) {
+    const token = req.headers['x-token'];
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const userId = await redisClient.get(`auth_${token}`);
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const { id } = req.params;
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const file = await dbClient.db.collection('files')
+      .findOne({ _id: new ObjectId(id), userId: new ObjectId(userId) });
+    
+    if (!file) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+
+    await dbClient.db.collection('files').updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { isPublic: true } }
+    );
+
+    const updatedFile = await dbClient.db.collection('files')
+      .findOne({ _id: new ObjectId(id) });
+
+    return res.status(200).json(updatedFile);
+  }
+
+  static async putUnpublish() {
+    const token = req.headers['x-token'];
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const userId = await redisClient.get(`auth_${token}`);
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const { id } = req.params;
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' })
+    }
+
+    const file = await dbClient.db.collection('files')
+      .findOne({ _id: new ObjectId(id), userId: new ObjectId(userId) })
+
+    if (!file) {
+      return res.status(404).json({ error: 'Not found' })
+    }
+
+    await dbClient.db.collection('files').updateOne(
+      { _id: new ObjectId(id) },
+      {  }
+    );
+
+    const updatedFile = await dbClient.db.collection('files')
+      .findOne({ _id: new ObjectId(id) });
+    
+    return res.status(200).json(updatedFile)
+  }
 }
